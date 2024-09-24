@@ -1,31 +1,129 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
+	"html/template"
+	"log"
+	"math/rand"
 	"net/http"
-	"REPASO_GO/App/functions"
-	
-
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
-func main(){
+type ImageData struct {
+	Base64 template.URL
+	Name   string
+}
 
-	// Ejemplo de slice de imágenes
-	imageFiles := []string{"App/images/El Beso.jpg","App/images/El grito del Alma.jpg", "App/images/El Hijo del Hombre.jpg", "" }
+type PageData struct {
+	Hostname     string
+	Images       []ImageData
+	Subject      string
+	Materia      string
+	Participants []string
+	Date         string
+}
 
-	// Cantidad de imágenes a seleccionar aleatoriamente
-	quantity := 2
+func cargarPage(images []ImageData, hostname string, plantilla1 string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		data := PageData{
+			Hostname:     hostname,
+			Images:       images,
+			Subject:      "Obras de arte mas conocidas",
+			Materia:      "Computación en la nube",
+			Participants: []string{"Johana Palacio", "Alejandro Zapata"},
+			Date:         "2024-2",
+		}
 
-	// Llamar a la función para obtener imágenes aleatorias sin repetición
-	selectedImages := functions.getImages(imageFiles, quantity)
+		tmpl := template.Must(template.ParseFiles("templates/" + plantilla1 + ".html"))
+		w.Header().Set("Content-Type", "text/html")
+		err := tmpl.Execute(w, data)
+		if err != nil {
+			log.Printf("Error al ejecutar la plantilla: %v", err)
+			http.Error(w, "Error interno del servidor", http.StatusInternalServerError)
+		}
+	}
+}
 
-	// Imprimir las imágenes seleccionadas
-	fmt.Println("Imágenes seleccionadas aleatoriamente:", selectedImages)
-	//DEVOLVER UN  MENSAJE A LA PETICION DEL CLIENTE
-	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request){
-		fmt.Fprintln(rw, "Hola Mundo")
+func main() {
+	if len(os.Args) < 2 {
+		log.Fatal("Se debe proporcionar la ruta de la carpeta de imágenes como argumento.")
+	}
+
+	imageDir := os.Args[1]
+	plantilla := os.Args[2]
+	plantilla1 := ""
+
+	if plantilla == "1" {
+		plantilla1 = "template1"
+	} else {
+		plantilla1 = "template2"
+	}
+	files, err := os.ReadDir(imageDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var imageFiles []string
+	validExtensions := map[string]bool{
+		".jpg": true, ".jpeg": true, ".png": true,
+	}
+
+	for _, file := range files {
+		ext := strings.ToLower(filepath.Ext(file.Name()))
+		if validExtensions[ext] {
+			imageFiles = append(imageFiles, filepath.Join(imageDir, file.Name()))
+		}
+	}
+
+	// Barajar las imágenes para seleccionar aleatoriamente
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	r.Shuffle(len(imageFiles), func(i, j int) {
+		imageFiles[i], imageFiles[j] = imageFiles[j], imageFiles[i] // Intercambiar posiciones
 	})
-		
-	fmt.Println("El servidor esta cotrriendo en puerto 3000")
-	http.ListenAndServe("localhost:3000", nil)
+
+	if len(imageFiles) > 4 {
+		if plantilla == "1" {
+			imageFiles = imageFiles[:4]
+		} else {
+			imageFiles = imageFiles[:3]
+		}
+
+	}
+
+	var images []ImageData
+	for _, imgPath := range imageFiles {
+		imgData, err := os.ReadFile(imgPath)
+		if err != nil {
+			log.Printf("Error al leer la imagen %s: %v", imgPath, err)
+			continue
+		}
+
+		ext := strings.ToLower(filepath.Ext(imgPath))
+		mimeType := "image/png"
+		if ext == ".jpg" || ext == ".jpeg" {
+			mimeType = "image/jpeg"
+		}
+
+		encoded := base64.StdEncoding.EncodeToString(imgData)
+		imageName := filepath.Base(imgPath)
+		base64URL := template.URL("data:" + mimeType + ";base64," + encoded)
+		images = append(images, ImageData{Base64: base64URL, Name: imageName})
+	}
+
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "Nombre del host desconocido"
+	}
+
+	http.HandleFunc("/", cargarPage(images, hostname, plantilla1))
+	fmt.Println("Servidor iniciado en el puerto 9090")
+
+	err = http.ListenAndServe(":9090", nil)
+	if err != nil {
+		log.Fatal("Error al iniciar el servidor:", err)
+	}
 }
