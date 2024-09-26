@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-// Estructura para manejar la información de las imágenes
+// Estructura para manejar la información de las imágeness
 type ImageData struct {
 	Base64 template.URL
 	Name   string
