@@ -35,6 +35,7 @@ var previousCount int       // Para almacenar el conteo de imágenes mostradas
 var isFirstRun = true       // Bandera para la primera ejecución
 var initialFolder string    // Carpeta pasada en la ejecución
 var initialTemplate string  // Plantilla pasada en la ejecución
+var puerto string
 
 // Función para seleccionar imágenes aleatoriamente de una carpeta
 func seleccionarImagenes(imageDir string, limit int) ([]ImageData, error) {
@@ -42,7 +43,7 @@ func seleccionarImagenes(imageDir string, limit int) ([]ImageData, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	//SOLO SACARA LAS IMAGENES CON ESE FORMATO Y LAS PASA A MINUSCULAS
 	var imageFiles []string
 	validExtensions := map[string]bool{
 		".jpg":  true,
@@ -63,32 +64,64 @@ func seleccionarImagenes(imageDir string, limit int) ([]ImageData, error) {
 		imageFiles[i], imageFiles[j] = imageFiles[j], imageFiles[i]
 	})
 
+	//intercambia las posiciones del arreglo para sacar aleatoriamente, la 
+	//la uncion que lo hace es shuffle, la funcion de intercambio es i j int
+	// Esto intercambia los elementos en las posiciones i y j dentro de imageFiles. 
+	//Es decir, el archivo en la posición i pasa a la posición j y viceversa.
+
 	// Limitar el número de imágenes
 	if len(imageFiles) > limit {
 		imageFiles = imageFiles[:limit]
 	}
 
 	var images []ImageData
+
+	//La función os.ReadFile se usa para leer
+	// todo el contenido del archivo de imagen en forma de bytes (imgData).
+
 	for _, imgPath := range imageFiles {
 		imgData, err := os.ReadFile(imgPath)
 		if err != nil {
 			log.Printf("Error al leer la imagen %s: %v", imgPath, err)
 			continue
 		}
-
+		//El tipo MIME es necesario para indicar el formato de la imagen en la codificación Base64.
 		ext := strings.ToLower(filepath.Ext(imgPath))
 		mimeType := "image/png"
 		if ext == ".jpg" || ext == ".jpeg" {
 			mimeType = "image/jpeg"
 		}
+		//La imagen leída como bytes (imgData) se codifica en una cadena de caracteres
+		// Base64 usando base64.StdEncoding.EncodeToString. Esto es útil 
+		//para incrustar la imagen directamente en el HTML sin necesidad de tener un archivo separado.
 
+
+		//e crea una URL en formato Data URI, que incluye el tipo MIME de la imagen y
+		// los datos codificados en Base64
 		encoded := base64.StdEncoding.EncodeToString(imgData)
 		base64URL := template.URL("data:" + mimeType + ";base64," + encoded)
 		images = append(images, ImageData{Base64: base64URL, Name: filepath.Base(imgPath)})
+
+		//Se crea una nueva instancia de la estructura ImageData, asignando el valor 
+		//codificado en Base64 (base64URL) y el nombre del archivo (filepath.Base(imgPath)).
+
 	}
 
 	return images, nil
 }
+
+
+
+//Esta función seleccionarNuevaPlantilla se utiliza para seleccionar 
+//y alternar entre dos plantillas de forma condicional. La decisión de qué 
+//plantilla devolver está basada en tres factores principales:
+
+//La carpeta actual (carpeta).
+//La cantidad actual de imágenes (currentCount).
+//El estado anterior de carpeta y plantilla (previousFolder, previousCount, previousTemplate).
+
+//CUando la caerpeta y las imagenes cambia hay una nueva plantilla
+//y si cambia la plantilla entonces cambia la caerpeta y el numero de imagenes
 
 // Función para alternar entre las plantillas
 func seleccionarNuevaPlantilla(carpeta string, currentCount int) string {
@@ -133,6 +166,16 @@ func seleccionarNuevaPlantilla(carpeta string, currentCount int) string {
 	}
 }
 
+
+
+//La función cargarPage es un handler de HTTP que carga una página web con una plantilla específica y datos personalizados, como las imágenes, el hostname,
+// el tema y otros detalles de la materia. 
+
+//El handler es una función o método que se encarga de manejar solicitudes HTTP 
+//(como GET, POST, etc.) y responder a ellas.
+
+// El handler debe construir y enviar una respuesta HTTP al cliente, que puede ser un archivo HTML
+
 // Función para cargar la página con la plantilla elegida, el tema asociado y la materia
 func cargarPage(images []ImageData, hostname string, plantillaElegida string, tema string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -156,11 +199,12 @@ func cargarPage(images []ImageData, hostname string, plantillaElegida string, te
 
 func main() {
 	// Obtener los parámetros iniciales desde la línea de comandos
-	if len(os.Args) != 3 {
+	if len(os.Args) != 4 {
 		log.Fatal("Uso: go run servidor.go <carpeta> <plantilla>")
 	}
 	initialFolder = os.Args[1]
 	initialTemplate = os.Args[2]
+	puerto = os.Args[3]
 
 	// Inicializar previousTemplate y previousFolder con los valores pasados por línea de comandos
 	previousTemplate = initialTemplate
@@ -238,5 +282,5 @@ func main() {
 	})
 
 	fmt.Println("Servidor iniciado en el puerto 9090")
-	log.Fatal(http.ListenAndServe(":9090", nil))
+	log.Fatal(http.ListenAndServe(":"+puerto, nil))
 }
