@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Servidor de imágenes</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f0f0f0;
+        }
+
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 0;
+        }
+
+        .image-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .image-container {
+            background-color: #343a40;
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 75%;
+            overflow: hidden;
+        }
+
+        .image-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-title {
+            padding: 8px;
+            margin: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            font-size: 0.8rem;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0;
+            margin-top: 15px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left, .footer-center, .footer-right {
+            flex: 1;
+            padding: 5px;
+        }
+
+        .footer-left {
+            text-align: left;
+        }
+
+        .footer-center {
+            text-align: center;
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+            }
+
+            .footer-left, .footer-center, .footer-right {
+                text-align: center;
+                width: 100%;
+            }
+        }
+
+        .row {
+            margin-left: -7.5px;
+            margin-right: -7.5px;
+        }
+
+        .col-12 {
+            padding-left: 7.5px;
+            padding-right: 7.5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0">
+        <!-- Header -->
+        <div class="header text-center">
+            <h1 class="mb-2">Servidor de imágenes <i class="fas fa-cloud"></i> </h1>
+        </div>
+
+        <br>
+        <div class="footer-center">
+            <p class="mb-0"><strong>Hostname:</strong> {{.Hostname}}</p>
+            <p class="mb-0"><strong>Tema:</strong> {{.Subject}}</p>
+        </div>
+
+        <!-- Image grid -->
+        <div class="container mt-3">
+            <div class="image-grid">
+                <div class="row g-0">
+                    {{range .Images}}
+                    <div class="col-12 col-md-4">
+                        <div class="image-container">
+                            <div class="image-wrapper">
+                                <img src="{{.Base64}}" alt="{{.Name}}" class="img-fluid">
+                                <p class="image-title">{{.Name}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-left">
+                        <p class="mb-0"><strong>{{.Materia}}</strong></p>
+                    </div>
+                    <div class="footer-center">
+                        <p class="mb-0"><strong>
+                            {{range $index, $participant := .Participants}}
+                            {{if $index}} - {{end}}{{$participant}}
+                            {{end}}</strong>
+                        </p>
+                    </div>
+                    <div class="footer-right">
+                        <strong><p class="mb-0">{{.Date}}</p></strong>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
