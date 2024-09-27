@@ -14,26 +14,67 @@
 
     <style>
         body {
-            background-color: #f0f0f0;
+            background-color: #e6f5f1;
+            font-family: 'Roboto', sans-serif;
         }
 
-        .header {
-            background-color: #333809;
-            color: white;
-            padding: 15px 0;
+        .navbar {
+            background-color: #06161677; /* Color de fondo con transparencia */
+            background-image: url('https://i.pinimg.com/564x/32/f2/b9/32f2b918a85bb9bdc8b7ff1c5a09426a.jpg'); /* Ruta de la imagen de fondo */
+            background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+            background-position: center; /* Centra la imagen */
+            font-size: 1.2rem;
+            color: rgb(44, 218, 174);
         }
+        .navbar-brand {
+            font-weight: bold;
+            color: rgb(70, 153, 201); /* Cambiado a negro */
+            font-size: 1.5rem;
+        }
+
+        .navbar-brand i {
+            color: rgb(255, 255, 255); /* Cambiado a negro */
+            margin-right: 10px;
+        }
+
+        .navbar-nav .nav-link {
+            color: black; /* Cambiado a negro */
+            padding-right: 20px;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #f1c40f;
+        }
+
+                .header {
+            background-color: #051f1c;
+            color: rgb(255, 255, 255);
+            padding: 6px;
+            padding-bottom: 30px;
+            height: 62px;
+            width: 500px;
+            border-radius: 10px;
+            margin-top: 3%;
+            margin-left: 32%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Sombra desvanecida */
+        }
+
 
         .image-grid {
-            max-width: 1000px;
+            max-width: 100%; /* Ancho máximo del contenedor */
             margin: 0 auto;
+            border-radius: 2px;
         }
 
         .image-container {
-            background-color: #0f4e3b;
+            background-color: #ffffff;
             color: white;
             margin-bottom: 15px;
-            border-radius: 10px 10px 0 0;
+            padding: 3px;
+            margin: 10px;
+            border-radius: 10px;
             overflow: hidden;
+   
         }
 
         .image-wrapper {
@@ -50,26 +91,54 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease, width 0.3s ease, height 0.3s ease;
+        }
+
+        .image-wrapper:hover img {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 90vh;
+            z-index: 1000;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .img-fluid {
+            border-radius: 10px;
         }
 
         .image-title {
             padding: 8px;
             margin: 0;
-            background-color: rgba(22, 82, 131, 0.61);
+            background-color: rgba(2, 19, 32, 0.637);
             position: absolute;
             bottom: 0;
             height: 40px;
-            border-radius: 9px;
+            border-bottom-left-radius: 9px;
+            border-bottom-right-radius: 9px;
             left: 0;
             right: 0;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .footer {
-            background-color: #343a40;
-            color: white;
-            padding: 10px 0;
-            margin-top: 15px;
+            background-color: #061616; /* Color de fondo con transparencia */
+            
+            background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+            background-position: center; /* Centra la imagen */
+            color: #ffffff;
+            padding: 7px;
+            margin-top: 20px;
+        }
+
+
+        .footer p {
+            margin: 0;
         }
 
         .footer-content {
@@ -79,21 +148,26 @@
             align-items: center;
         }
 
-        .footer-left, .footer-center, .footer-right {
+        .footer-left,
+        .footer-center,
+        .footer-right {
             flex: 1;
             padding: 5px;
         }
 
         .footer-left {
             text-align: left;
+            font-size: 1.1rem;
         }
 
         .footer-center {
             text-align: center;
+            font-size: 1.1rem;
         }
 
         .footer-right {
             text-align: right;
+            font-size: 1.1rem;
         }
 
         @media (max-width: 768px) {
@@ -101,43 +175,52 @@
                 flex-direction: column;
             }
 
-            .footer-left, .footer-center, .footer-right {
+            .footer-left,
+            .footer-center,
+            .footer-right {
                 text-align: center;
                 width: 100%;
             }
-        }
-
-        .row {
-            margin-left: -7.5px;
-            margin-right: -7.5px;
-        }
-
-        .col-12 {
-            padding-left: 7.5px;
-            padding-right: 7.5px;
         }
     </style>
 </head>
 
 <body>
     <div class="container-fluid p-0">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container">
+                <a class="navbar-brand"><i class="fas fa-cloud"></i>Servidor de imágenes</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Inicio</a> <!-- Color negro aplicado -->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
         <!-- Header -->
         <div class="header text-center">
-            <h1 class="mb-2">Servidor de imágenes <i class="fas fa-cloud"></i> </h1>
+            <h1 class="mb-2"><strong>{{.Subject}}</strong></h1>
         </div>
 
         <br>
         <div class="footer-center">
             <p class="mb-0"><strong>Hostname:</strong> {{.Hostname}}</p>
-            <p class="mb-0"><strong>Tema:</strong> {{.Subject}}</p>
+            
         </div>
 
-        <!-- Image grid -->
         <div class="container mt-3">
             <div class="image-grid">
-                <div class="row g-0">
+                <div class="row g-0 justify-content-center">
                     {{range .Images}}
-                    <div class="col-12 col-md-4">
+                    <div class="col-3"> <!-- Cambia col-6 a col-3 para que sean más estrechas -->
                         <div class="image-container">
                             <div class="image-wrapper">
                                 <img src="{{.Base64}}" alt="{{.Name}}" class="img-fluid">
@@ -149,23 +232,18 @@
                 </div>
             </div>
         </div>
-
         <!-- Footer -->
         <footer class="footer">
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-left">
-                        <p class="mb-0"><strong>{{.Materia}}</strong></p>
+                        <p><strong>{{.Materia}}</strong></p>
                     </div>
                     <div class="footer-center">
-                        <p class="mb-0"><strong>
-                            {{range $index, $participant := .Participants}}
-                            {{if $index}} - {{end}}{{$participant}}
-                            {{end}}</strong>
-                        </p>
+                        <p><strong>{{range $index, $participant := .Participants}}{{if $index}} - {{end}}{{$participant}}{{end}}</strong></p>
                     </div>
                     <div class="footer-right">
-                        <strong><p class="mb-0">{{.Date}}</p></strong>
+                        <p><strong>{{.Date}}</strong></p>
                     </div>
                 </div>
             </div>
