@@ -95,18 +95,18 @@
         }
 
         .image-wrapper:hover img {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1);
-            width: auto;
-            height: auto;
-            max-width: 90vw;
-            max-height: 90vh;
-            z-index: 1000;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-        }
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: auto; /* Mantiene el ancho automático para conservar la proporción */
+    height: auto; /* Mantiene la altura automática para conservar la proporción */
+    max-width: 80vw; /* Limita el ancho máximo al 80% del ancho de la ventana */
+    max-height: 80vh; /* Limita la altura máxima al 80% de la altura de la ventana */
+    z-index: 1000;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
 
         .img-fluid {
             border-radius: 10px;
@@ -206,9 +206,13 @@
         </nav>
 
         <!-- Header -->
-        <div class="header text-center">
-            <h1 class="mb-2"><strong>{{.Subject}}</strong></h1>
-        </div>
+    <!-- Header -->
+    <div class="header text-center">
+        <h1 class="mb-2" style="font-size: calc(1rem + 2vw); word-wrap: break-word; text-align: center; margin: 0;"><strong>{{.Subject}}</strong></h1>
+    </div>
+
+
+
 
         <br>
         <div class="footer-center">
