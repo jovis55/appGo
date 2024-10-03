@@ -46,22 +46,19 @@
             color: #f1c40f;
         }
 
-                .header {
-            background-color: #051f1c;
-            color: rgb(255, 255, 255);
-            padding: 6px;
-            padding-bottom: 30px;
-            height: 62px;
-            width: 500px;
-            border-radius: 10px;
-            margin-top: 3%;
-            margin-left: 32%;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Sombra desvanecida */
-        }
+        .divtitulo {
+        background-color: #041f19; /* Color suave para el fondo */
+        padding: 4px; /* Espacio interno alrededor del título */
+        border-radius: 10px; /* Bordes redondeados */
+        box-shadow: 0 4px 10px rgba(0, 0, 0.1, 0.1); /* Sombra ligera */
+        margin: 20px auto; /* Margen para centrar el div */
+        max-width: 90%; /* Tamaño máximo que ocupa el 90% del ancho */
+        color: white;
+}
 
 
         .image-grid {
-            max-width: 900px; /* Ancho máximo del contenedor */
+            max-width: 100%; /* Ancho máximo del contenedor */
             margin: 0 auto;
             border-radius: 2px;
         }
@@ -95,19 +92,19 @@
         }
 
         
-        .image-wrapper:hover img {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    width: auto; /* Mantiene el ancho automático para conservar la proporción */
-    height: auto; /* Mantiene la altura automática para conservar la proporción */
-    max-width: 80vw; /* Limita el ancho máximo al 80% del ancho de la ventana */
-    max-height: 80vh; /* Limita la altura máxima al 80% de la altura de la ventana */
-    z-index: 1000;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-}
+            .image-wrapper:hover img {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        width: auto; /* Mantiene el ancho automático para conservar la proporción */
+        height: auto; /* Mantiene la altura automática para conservar la proporción */
+        max-width: 80vw; /* Limita el ancho máximo al 80% del ancho de la ventana */
+        max-height: 80vh; /* Limita la altura máxima al 80% de la altura de la ventana */
+        z-index: 1000;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
 
 
         .img-fluid {
@@ -207,11 +204,12 @@
             </div>
         </nav>
 
-            <!-- Header -->
+        <!-- Header -->
+    <div class="divtitulo">
         <div class="header text-center">
             <h1 class="mb-2" style="font-size: calc(1rem + 2vw); word-wrap: break-word; text-align: center; margin: 0;"><strong>{{.Subject}}</strong></h1>
         </div>
-
+        </div>
         <br>
         <div class="footer-center">
             <p class="mb-0"><strong>Hostname:</strong> {{.Hostname}}</p>
